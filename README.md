@@ -10,6 +10,7 @@ Query [SEC EDGAR API](https://www.sec.gov/edgar/sec-api-documentation) by compan
 3. Make queries with either of these two urls:
    - `http://localhost:3000/pages?` to see a basic form, add a ticker symbol and submit to retrieve data.
    - `http://localhost:3000/api/data?ticker=--example--` (replace "--example--" with a valid ticker symbol) to see data in json format.
+4. Data returned in .json format and as an html string formatted with table tags.
 
 ## Updates
 
