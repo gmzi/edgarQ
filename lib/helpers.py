@@ -219,12 +219,11 @@ def track_data_last_quarter_of_year(list_, key_, milli=False):
 def calculate_assets_for_common_stock(assets_dict, shares_dict):
     group = dict()
     for key, value in assets_dict.items():
-        year = key
         assets = value
         if key in shares_dict:
             shares = shares_dict[f"{key}"]
             net_assets_for_common = assets / shares
-            group[key] = net_assets_for_common
+            group[key] = round(net_assets_for_common, 3)
     return group
 
 

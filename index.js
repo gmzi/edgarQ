@@ -47,9 +47,9 @@ async function stockRequests(ticker) {
       eps_diluted: epsDiluted.eps_diluted_data,
       net_income: netIncome.net_income_data,
       shares_outstanding:
-        sharesOutstandingAndNetAssetsForCommon.shares_outstanding,
+        sharesOutstandingAndNetAssetsForCommon.shares_outstanding_data,
       net_assets_for_common:
-        sharesOutstandingAndNetAssetsForCommon.net_assets_for_common,
+        sharesOutstandingAndNetAssetsForCommon.net_assets_for_common_data,
     };
     return responseData;
   } else {

@@ -56,10 +56,13 @@ def catch_all(path):
             net_assets_for_common_stock = "n/a"
 
         shares_outstanding_millified = helpers.millify_me(shares_outstanding)
+        shares_outstanding_table = helpers.create_table(
+            shares_outstanding_millified)
 
         result = {
-            "shares_outstanding": shares_outstanding_millified,
-            "net_assets_for_common": net_assets_for_common_stock
+            "shares_outstanding_history": shares_outstanding_table,
+            "shares_outstanding_data": shares_outstanding_millified,
+            "net_assets_for_common_data": net_assets_for_common_stock
         }
 
         j_result = json.dumps(result)
