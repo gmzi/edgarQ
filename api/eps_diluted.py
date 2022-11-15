@@ -40,8 +40,6 @@ def catch_all(path):
             j_eps_diluted = eps_diluted_req.json()
             eps_diluted = helpers.data_10K_regex(j_eps_diluted, "USD/shares")
             eps_diluted_table = helpers.create_table(eps_diluted, compare_url)
-            # eps_diluted = helpers.track_data_quarterly(
-            #     j_eps_diluted, "USD/shares")
         else:
             eps_diluted_table = "N/A"
 

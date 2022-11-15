@@ -61,7 +61,7 @@ def create_table(dict_, source_url=False):
     return result
 
 
-def create_table_multi(dict_1, dict_2, source_url=False):
+def create_table_multi(dict_1, dict_2, dict_3, source_url=False):
     newRows = ""
     if source_url:
         source = f"<a href={source_url} target='_blank' rel='noreferrer'>check</a>"
@@ -73,13 +73,15 @@ def create_table_multi(dict_1, dict_2, source_url=False):
             assets = value
             if key in dict_2:
                 liabilities = dict_2[f"{key}"]
+                assets_to_liabilities = f"""{dict_3[f"{key}"]}x"""
             else:
                 liabilities = "n/a"
-            newRow = f"<tr><td>{year}</td><td>{assets}</td><td>{liabilities}</td></tr>"
+                assets_to_liabilities = "n/a"
+            newRow = f"<tr><td>{year}</td><td>{assets_to_liabilities}</td><td>{assets}</td><td>{liabilities}</td></tr>"
             newRows += newRow
     else:
         newRows = f"<tr><td>No data</td></tr>"
-    result = f"""<table><tbody><thead><tr><th>Year</th><th>Assets</th><th>Liabilities</th></tr></thead>{newRows}</tbody></table>{source}"""
+    result = f"""<table><tbody><thead><tr><th>Year</th><th>Assets to liabilities</th><th>Assets</th><th>Liabilities</th></tr></thead>{newRows}</tbody></table>{source}"""
     return result
 
 # ----------------------------------------------------------------------------
@@ -224,6 +226,17 @@ def calculate_assets_for_common_stock(assets_dict, shares_dict):
             shares = shares_dict[f"{key}"]
             net_assets_for_common = assets / shares
             group[key] = round(net_assets_for_common, 3)
+    return group
+
+
+def calculate_assets_to_liabilities(assets_dict, liabilities_dict):
+    group = dict()
+    for key, value in assets_dict.items():
+        assets = value
+        if key in liabilities_dict:
+            liabilities = liabilities_dict[f"{key}"]
+            assets_to_liabilities = assets / liabilities
+            group[key] = round(assets_to_liabilities, 1)
     return group
 
 
