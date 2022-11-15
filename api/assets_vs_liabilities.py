@@ -37,24 +37,29 @@ def catch_all(path):
         if assets_req.status_code == 200:
             j_assets = assets_req.json()
             assets = helpers.data_10K_assets(j_assets, milli=False)
+            assets_millified = helpers.millify_me(assets)
         else:
             assets = "N/A"
+            assets_millified = "N/A"
         # -------------------------------------------------------------------------
         liabilities_req = requests.get(
             f"https://data.sec.gov/api/xbrl/companyconcept/{newCIK}/us-gaap/Liabilities.json", headers=headers)
         if liabilities_req.status_code == 200:
             j_liabilities = liabilities_req.json()
             liabilities = helpers.data_10K_assets(j_liabilities, milli=False)
+            liabilities_millified = helpers.millify_me(liabilities)
         else:
             liabilities = "N/A"
+            liabilities_millified = "N/A"
 
-        assets_to_liabilities = helpers.calculate_assets_to_liabilities(
-            assets, liabilities)
-
-        assets_millified = helpers.millify_me(assets)
-        liabilities_millified = helpers.millify_me(liabilities)
-        assets_vs_liabilities = helpers.create_table_multi(
-            assets_millified, liabilities_millified, assets_to_liabilities)
+        if type(assets) == dict and type(liabilities) == dict:
+            assets_to_liabilities = helpers.calculate_assets_to_liabilities(
+                assets, liabilities)
+            assets_vs_liabilities = helpers.create_table_multi(
+                assets_millified, liabilities_millified, assets_to_liabilities)
+        else:
+            assets_to_liabilities = "n/a"
+            assets_vs_liabilities = "n/a"
 
         result = {
             "assets_vs_liabilities": assets_vs_liabilities,
