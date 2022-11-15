@@ -242,9 +242,6 @@ def calculate_assets_to_liabilities(assets_dict, liabilities_dict):
 
 def millify_me(dict_):
     group = dict()
-    if len(dict_):
-        for key, value in dict_.items():
-            group[key] = millify(value)
-        return group
-    else:
-        return "n/a"
+    for key, value in dict_.items():
+        group[key] = millify(value)
+    return group
