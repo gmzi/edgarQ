@@ -3,7 +3,7 @@ submitBtn = tickerInputForm.querySelector('button');
 tickerInput = document.querySelector('#textarea');
 display = document.querySelector('#display');
 
-const BASE_URL = 'http://localhost:3000/api';
+const BASE_URL = 'api';
 
 submitBtn.addEventListener('click', async function (e) {
   e.preventDefault();
