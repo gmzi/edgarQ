@@ -38,7 +38,7 @@ def catch_all(path):
             j_assets = assets_req.json()
             assets = helpers.data_10K_assets(j_assets, milli=False)
         else:
-            assets = False
+            assets = "n/a"
 
         shares_outstanding_req = requests.get(
             f"https://data.sec.gov/api/xbrl/companyconcept/{newCIK}/us-gaap/CommonStockSharesOutstanding.json", headers=headers)
@@ -47,17 +47,22 @@ def catch_all(path):
             shares_outstanding = helpers.track_data_last_quarter_of_year(
                 j_shares_outstanding, "shares", False)
         else:
-            shares_outstanding = False
+            shares_outstanding = "n/a"
 
-        if assets and shares_outstanding:
+        if type(assets) == dict and type(shares_outstanding) == dict:
             net_assets_for_common_stock = helpers.calculate_assets_for_common_stock(
                 assets, shares_outstanding)
         else:
             net_assets_for_common_stock = "n/a"
 
-        shares_outstanding_millified = helpers.millify_me(shares_outstanding)
-        shares_outstanding_table = helpers.create_table(
-            shares_outstanding_millified)
+        if type(shares_outstanding) == dict:
+            shares_outstanding_millified = helpers.millify_me(
+                shares_outstanding)
+            shares_outstanding_table = helpers.create_table(
+                shares_outstanding_millified)
+        else:
+            shares_outstanding_millified = "n/a"
+            shares_outstanding_table = f"<table><tbody><tr><td>N/A</td></tr></tbody></table>"
 
         result = {
             "shares_outstanding_history": shares_outstanding_table,
