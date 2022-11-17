@@ -39,6 +39,7 @@ def catch_all(path):
         if eps_diluted_req.status_code == 200:
             j_eps_diluted = eps_diluted_req.json()
             eps_diluted = helpers.data_10K_regex(j_eps_diluted, "USD/shares")
+            # growth_rates = helpers.extract_growth_rates(eps_diluted)
             eps_diluted_table = helpers.create_table(eps_diluted, compare_url)
         else:
             eps_diluted_table = "N/A"

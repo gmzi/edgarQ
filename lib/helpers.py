@@ -85,7 +85,35 @@ def create_table_multi(dict_1, dict_2, dict_3, source_url=False):
     return result
 
 # ----------------------------------------------------------------------------
-# METHODS
+# FINANCIAL METHODS
+# ----------------------------------------------------------------------------
+
+
+def calculate_EPS_growth_percentage(EPS_final, EPS_initial):
+    if EPS_final > 0 and EPS_initial > 0:
+        diference = EPS_final - EPS_initial
+        division = diference / EPS_initial
+        result = division * 100
+        return round(result, 2)
+    else:
+        return 0
+
+
+def calculate_EPS_growth_rate(EPS_final, EPS_initial, number_of_periods):
+    if EPS_final > 0 and EPS_initial > 0:
+        exponent = 1 / number_of_periods
+        division = EPS_final / EPS_initial
+        exponencial = pow(division, exponent)
+        result = (exponencial - 1) * 100
+        return round(result, 2)
+    else:
+        return 0
+
+# print(calculate_EPS_growth_percentage(-3.31, 1))
+# print(calculate_EPS_growth_rate(1, 2, 9))
+
+# ----------------------------------------------------------------------------
+# DATA EXTRACTION METHODS
 # ----------------------------------------------------------------------------
 
 
