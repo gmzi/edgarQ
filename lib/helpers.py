@@ -45,7 +45,7 @@ def millify(n):
     return '{:,.2f}{}'.format(n / 10**(3 * millidx), millnames[millidx])
 
 
-def create_table(dict_, source_url=False):
+def create_table(dict_, source_url=False, dollarsign=False):
     newRows = ""
     if source_url:
         source = f"<a href={source_url} target='_blank' rel='noreferrer'>check</a>"
@@ -53,7 +53,10 @@ def create_table(dict_, source_url=False):
         source = ""
     if len(dict_):
         for key, value in dict_.items():
-            newRow = f"<tr><td>{key}</td><td>{value}</td></tr>"
+            if dollarsign == True:
+                newRow = f"<tr><td>{key}</td><td>${value}</td></tr>"
+            else:
+                newRow = f"<tr><td>{key}</td><td>{value}</td></tr>"
             newRows += newRow
     else:
         newRows = f"<tr><td>No data</td></tr>"

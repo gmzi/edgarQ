@@ -40,7 +40,8 @@ def catch_all(path):
             j_eps_diluted = eps_diluted_req.json()
             eps_diluted = helpers.data_10K_regex(j_eps_diluted, "USD/shares")
             # growth_rates = helpers.extract_growth_rates(eps_diluted)
-            eps_diluted_table = helpers.create_table(eps_diluted, compare_url)
+            eps_diluted_table = helpers.create_table(
+                eps_diluted, compare_url, dollarsign=True)
         else:
             eps_diluted_table = "N/A"
 
