@@ -48,7 +48,7 @@ def millify(n):
 def create_table(dict_, source_url=False, dollarsign=False):
     newRows = ""
     if source_url:
-        source = f"<a href={source_url} target='_blank' rel='noreferrer'>check</a>"
+        source = f"<a href={source_url} target='_blank' rel='noreferrer'>validate</a>"
     else:
         source = ""
     if len(dict_):
