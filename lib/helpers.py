@@ -65,8 +65,8 @@ def create_table(dict_, source_url=False, dollarsign=False):
 
 
 def create_table_multi(dict_1, dict_2, dict_3, source_url=False):
-    if type(dict_1) != "dict" or type(dict_2) != "dict" or type(dict_3) != "dict":
-        return "n/a"
+    if type(dict_1) != dict or type(dict_2) != dict or type(dict_3) != dict:
+        return "n/d"
     else:
         newRows = ""
         if source_url:
