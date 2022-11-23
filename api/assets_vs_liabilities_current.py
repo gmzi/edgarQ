@@ -51,6 +51,20 @@ def catch_all(path):
         else:
             liabilities = "N/A"
             liabilities_millified = "N/A"
+        # -------------------------------------------------------------------------
+        # Alternate tags to try:
+        # LiabilitiesNoncurrent
+        # LongTermDebtNoncurrent
+        long_term_debt_req = requests.get(
+            f"https://data.sec.gov/api/xbrl/companyconcept/{newCIK}/us-gaap/LongTermDebt.json", headers=headers)
+        if long_term_debt_req.status_code == 200:
+            j_long_term_debt = long_term_debt_req.json()
+            long_term_debt = helpers.track_data_last_quarter_of_year(
+                j_long_term_debt, "USD", milli=False)
+            long_term_debt_millified = helpers.millify_me(long_term_debt)
+        else:
+            long_term_debt = "N/A"
+            long_term_debt_millified = "N/A"
 
         if type(assets) == dict and type(liabilities) == dict:
             assets_to_liabilities = helpers.calculate_assets_to_liabilities(
@@ -65,7 +79,9 @@ def catch_all(path):
             "assets_vs_liabilities_current": assets_vs_liabilities,
             "assets_to_liabilities_current_data": assets_to_liabilities,
             "assets_current_data": assets_millified,
-            "liabilities_current_data": liabilities_millified
+            "liabilities_current_data": liabilities_millified,
+            "long_term_debt": long_term_debt,
+            "long_term_debt_millified": long_term_debt_millified
         }
 
         j_result = json.dumps(result)

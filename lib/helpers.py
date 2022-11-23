@@ -65,27 +65,30 @@ def create_table(dict_, source_url=False, dollarsign=False):
 
 
 def create_table_multi(dict_1, dict_2, dict_3, source_url=False):
-    newRows = ""
-    if source_url:
-        source = f"<a href={source_url} target='_blank' rel='noreferrer'>check</a>"
+    if type(dict_1) != "dict" or type(dict_2) != "dict" or type(dict_3) != "dict":
+        return "n/a"
     else:
-        source = ""
-    if len(dict_1):
-        for key, value in dict_1.items():
-            year = key
-            assets = value
-            if key in dict_2:
-                liabilities = dict_2[f"{key}"]
-                assets_to_liabilities = f"""{dict_3[f"{key}"]}x"""
-            else:
-                liabilities = "n/a"
-                assets_to_liabilities = "n/a"
-            newRow = f"<tr><td>{year}</td><td>{assets_to_liabilities}</td><td>{assets}</td><td>{liabilities}</td></tr>"
-            newRows += newRow
-    else:
-        newRows = f"<tr><td>No data</td></tr>"
-    result = f"""<table><tbody><thead><tr><th>Year</th><th>Assets to liabilities</th><th>Assets</th><th>Liabilities</th></tr></thead>{newRows}</tbody></table>{source}"""
-    return result
+        newRows = ""
+        if source_url:
+            source = f"<a href={source_url} target='_blank' rel='noreferrer'>check</a>"
+        else:
+            source = ""
+        if len(dict_1):
+            for key, value in dict_1.items():
+                year = key
+                assets = value
+                if key in dict_2:
+                    liabilities = dict_2[f"{key}"]
+                    assets_to_liabilities = f"""{dict_3[f"{key}"]}x"""
+                else:
+                    liabilities = "n/a"
+                    assets_to_liabilities = "n/a"
+                newRow = f"<tr><td>{year}</td><td>{assets_to_liabilities}</td><td>{assets}</td><td>{liabilities}</td></tr>"
+                newRows += newRow
+        else:
+            newRows = f"<tr><td>No data</td></tr>"
+        result = f"""<table><tbody><thead><tr><th>Year</th><th>Assets to liabilities</th><th>Assets</th><th>Liabilities</th></tr></thead>{newRows}</tbody></table>{source}"""
+        return result
 
 # ----------------------------------------------------------------------------
 # FINANCIAL METHODS
@@ -144,6 +147,19 @@ def data_10K_assets(list_, milli=True):
     group = dict()
     for obj in list_["units"]["USD"]:
         if obj["form"] == "10-K" or obj["form"] == "10-K/A":
+            data = int(obj["val"])
+            if milli == True:
+                group[f"{obj['fy']}"] = millify(data)
+            else:
+                group[f"{obj['fy']}"] = data
+    sorted_group = {k: group[k] for k in sorted(group.keys(), reverse=True)}
+    return sorted_group
+
+
+def data_FP(list_, milli=True):
+    group = dict()
+    for obj in list_["units"]["USD"]:
+        if obj["fp"] == "FY":
             data = int(obj["val"])
             if milli == True:
                 group[f"{obj['fy']}"] = millify(data)
