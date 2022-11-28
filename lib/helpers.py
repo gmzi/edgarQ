@@ -70,7 +70,7 @@ def create_table_multi(dict_1, dict_2, dict_3, source_url=False):
     else:
         newRows = ""
         if source_url:
-            source = f"<a href={source_url} target='_blank' rel='noreferrer'>check</a>"
+            source = f"<a href={source_url} target='_blank' rel='noreferrer'>validate</a>"
         else:
             source = ""
         if len(dict_1):
