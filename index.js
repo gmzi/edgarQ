@@ -25,8 +25,8 @@ submitBtn.addEventListener('click', async function (e) {
 
 async function stockRequests(ticker) {
   // TODO: query tickerSymbols.js, proceed if exists, return not found if not.
+  // DRAFT: loop over routes to make requests:
   const getRoutes = await fetch(`${BASE_URL}/routes`);
-  // loop over routes to make requests:
   const routes = await getRoutes.json();
 
   const totalAssetsVsLiabilitiesRes = await fetch(
