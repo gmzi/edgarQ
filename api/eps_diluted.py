@@ -66,13 +66,13 @@ def catch_all(path):
             if price_req.status_code == 200 and avg_eps_last_3:
                 j_price = price_req.json()
                 price = j_price["price"]
-                price_to_average_eps_last_3_years_ratio = helpers.calc_price_to_average_earnings_last_3_years_ratio(
+                price_to_avg_eps_last_3_years_ratio = helpers.calc_price_to_average_earnings_last_3_years_ratio(
                     price, avg_eps_last_3)
             else:
-                price_to_average_eps_last_3_years_ratio = "n/a"
+                price_to_avg_eps_last_3_years_ratio = "n/a"
         else:
             avg_eps_last_3 = "n/a"
-            price_to_average_eps_last_3_years_ratio = "n/d"
+            price_to_avg_eps_last_3_years_ratio = "n/d"
             avg_eps_growth_by_3 = "n/d"
             avg_eps_growth_beginning_and_end = "n/d"
 
@@ -80,7 +80,7 @@ def catch_all(path):
             "eps_diluted": eps_diluted_table,
             "eps_diluted_data": eps_diluted,
             "avg_eps_last_3_years": f"${avg_eps_last_3}",
-            "price_to_average_eps_last_3_years": f"{price_to_average_eps_last_3_years_ratio}x",
+            "price_to_avg_eps_last_3_years_ratio": f"{price_to_avg_eps_last_3_years_ratio}x",
             "eps_growth_avg_10_years_by_3": f"{avg_eps_growth_by_3}%",
             "eps_growth_avg_10_years_beginning_and_end": f"{avg_eps_growth_beginning_and_end}%"
         }

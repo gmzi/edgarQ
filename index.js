@@ -48,7 +48,15 @@ async function stockRequests(ticker) {
     ticker: ticker,
     ok: true,
     assets: totalAssetsVsLiabilities.assets_data,
-    eps_diluted: epsDiluted.eps_diluted_data,
+    eps: {
+      eps_diluted: epsDiluted.eps_diluted_data,
+      avg_eps_last_3_years: epsDiluted.avg_eps_last_3_years,
+      price_to_avg_eps_last_3_years_ratio:
+        epsDiluted.price_to_avg_eps_last_3_years_ratio,
+      eps_growth_avg_10_years_by_3: epsDiluted.eps_growth_avg_10_years_by_3,
+      eps_growth_avg_10_years_beginning_and_end:
+        epsDiluted.eps_growth_avg_10_years_beginning_and_end,
+    },
     net_income: netIncome.net_income_data,
     shares_outstanding:
       sharesOutstandingAndNetAssetsForCommon.shares_outstanding_data,
