@@ -3,6 +3,8 @@ submitBtn = tickerInputForm.querySelector('button');
 tickerInput = document.querySelector('#textarea');
 display = document.querySelector('#display');
 
+
+
 const BASE_URL = 'api';
 
 submitBtn.addEventListener('click', async function (e) {
@@ -22,6 +24,11 @@ submitBtn.addEventListener('click', async function (e) {
 });
 
 async function stockRequests(ticker) {
+  // TODO: query tickerSymbols.js, proceed if exists, return not found if not.
+  const getRoutes = await fetch(`${BASE_URL}/routes`);
+  // loop over routes to make requests:
+  const routes = await getRoutes.json();
+
   const totalAssetsVsLiabilitiesRes = await fetch(
     `${BASE_URL}/assets_vs_liabilities?ticker=${ticker}`
   );

@@ -115,8 +115,39 @@ def calculate_EPS_growth_rate(EPS_final, EPS_initial, number_of_periods):
     else:
         return 0
 
-# print(calculate_EPS_growth_percentage(-3.31, 1))
-# print(calculate_EPS_growth_rate(1, 2, 9))
+
+def calc_average_earnings(list_):
+    result = round(sum(list_) / 3, 2)
+    return result
+
+
+def calc_price_to_average_earnings_last_3_years_ratio(curr_price, avg_earnings,):
+    result = round(curr_price / avg_earnings, 2)
+    return result
+
+
+def calc_percentage_increase(last_3, first_3):
+    step_1 = (last_3 - first_3) / first_3
+    percent = step_1 * 100
+    result = round(percent, 2)
+    return result
+
+
+def calc_earnings_growth(list_, by_3=True):
+    last_3_ = list_[0:3]
+    first_3_ = list_[8:11]
+    last_1 = list_[0]
+    first_1 = list_[11]
+    avg_last_3 = calc_average_earnings(last_3_)
+    avg_first_3 = calc_average_earnings(first_3_)
+    if by_3:
+        avg_e_growth_by_3 = calc_percentage_increase(
+            avg_last_3, avg_first_3)
+        return avg_e_growth_by_3
+    else:
+        avg_e_growth_beginning_and_end = calc_percentage_increase(
+            last_1, first_1)
+        return avg_e_growth_beginning_and_end
 
 # ----------------------------------------------------------------------------
 # DATA EXTRACTION METHODS

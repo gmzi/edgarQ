@@ -1,11 +1,14 @@
 # edgarQ
 
 Query [SEC EDGAR API](https://www.sec.gov/edgar/sec-api-documentation) by company concept using python. A serverless Flask route and helper functions to send requests and process responses. Information is not accurate and there's a lot to explore. Please fork / refactor / contribute.
+Live price data being requested from [FMP](https://site.financialmodelingprep.com)
 
 ## Usage
 
 1. Create an .env file in project root, and add this:  
+   BASE_URL="http://localhost:3000/api"
    USER_AGENT="[your email of choice]"
+   FMP_API_KEY="your api key". (Obtain yours [here](https://site.financialmodelingprep.com))
 2. Run locally with `vercel dev` command. (You might have to install the vercel CLI, if so you can find instructions [here](https://vercel.com/docs/cli)).
 3. Make queries with either of these two urls:
    - `http://localhost:3000` to see a basic form, add a ticker symbol and submit to display all data as a prettified json.

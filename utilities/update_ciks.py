@@ -21,9 +21,16 @@ tickers_cik = requests.get(
 
 cik = tickers_cik.json()
 
-result = json.dumps(cik)
+cik_data = json.dumps(cik)
+# Create lib/cik_local.json:
 f = open("../lib/cik_local.json", "w")
-f.write(result)
+f.write(cik_data)
 f.close()
 
-print('done')
+# Create tickerSymbols.js:
+doc_body = f"""export const tickerSymbols = [{cik_data}] """
+f = open("../tickerSymbols.js", "w")
+f.write(doc_body)
+f.close()
+
+print("done! I've created the file /lib/cik_local.json and the file tickerSymbols.js")

@@ -6,6 +6,7 @@ import json
 import traceback
 
 USER_AGENT = os.environ.get('USER_AGENT')
+BASE_URL = os.environ.get('BASE_URL')
 
 app = Flask(__name__)
 
@@ -16,8 +17,9 @@ app = Flask(__name__)
 @app.route('/<path:path>')
 def catch_all(path):
     """
-    This route takes a stock ticker symbol from client, requests data from SEC api (https://www.sec.gov/edgar/sec-api-documentation) and returns values
-    to client.
+    This route takes a stock ticker symbol from client, requests EPS DILUTED data from SEC api (https://www.sec.gov/edgar/sec-api-documentation) and 
+    calculates EPS growth in 10 a 10 year period, by 3 year averages at the beginning and end and by increase of oldest to newest values. 
+    Also requests live price data from ./price.py to calculate average earnings to price ratio. 
     """
     try:
         headers = {'User-Agent': f"{USER_AGENT}"}
@@ -43,11 +45,44 @@ def catch_all(path):
             eps_diluted_table = helpers.create_table(
                 eps_diluted, compare_url, dollarsign=True)
         else:
+            eps_diluted = "N/A"
             eps_diluted_table = "N/A"
+        # ----------------------------------------------------------------------------
+        # If SEC query retrieved enough EPS data, calculate EPS average growth and average EPS to price ratio.
+        if type(eps_diluted) == dict:
+            period_10Y = list(eps_diluted.values())
+            if len(period_10Y) >= 10:
+                avg_eps_last_3 = helpers.calc_average_earnings(period_10Y[0:3])
+                avg_eps_growth_by_3 = helpers.calc_earnings_growth(period_10Y)
+                avg_eps_growth_beginning_and_end = helpers.calc_earnings_growth(
+                    period_10Y, by_3=False)
+            elif len(period_10Y) <= 4:
+                avg_eps_last_3 = helpers.calc_average_earnings(period_10Y[0:3])
+            else:
+                avg_eps_last_3 = None
+            # -------------------------------------------------------
+            # PRICE REQUEST:
+            price_req = requests.get(f"{BASE_URL}/price?ticker={ticker}")
+            if price_req.status_code == 200 and avg_eps_last_3:
+                j_price = price_req.json()
+                price = j_price["price"]
+                price_to_average_eps_last_3_years_ratio = helpers.calc_price_to_average_earnings_last_3_years_ratio(
+                    price, avg_eps_last_3)
+            else:
+                price_to_average_eps_last_3_years_ratio = "n/a"
+        else:
+            avg_eps_last_3 = "n/a"
+            price_to_average_eps_last_3_years_ratio = "n/d"
+            avg_eps_growth_by_3 = "n/d"
+            avg_eps_growth_beginning_and_end = "n/d"
 
         result = {
             "eps_diluted": eps_diluted_table,
-            "eps_diluted_data": eps_diluted
+            "eps_diluted_data": eps_diluted,
+            "avg_eps_last_3_years": f"${avg_eps_last_3}",
+            "price_to_average_eps_last_3_years": f"{price_to_average_eps_last_3_years_ratio}x",
+            "eps_growth_avg_10_years_by_3": f"{avg_eps_growth_by_3}%",
+            "eps_growth_avg_10_years_beginning_and_end": f"{avg_eps_growth_beginning_and_end}%"
         }
 
         j_result = json.dumps(result)
