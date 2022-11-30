@@ -1,7 +1,8 @@
 # edgarQ
 
-Query [SEC EDGAR API](https://www.sec.gov/edgar/sec-api-documentation) by company concept using python. A serverless Flask route and helper functions to send requests and process responses. Information is not accurate and there's a lot to explore. Please fork / refactor / contribute.
-Live price data being requested from [FMP](https://site.financialmodelingprep.com)
+Query [SEC EDGAR API](https://www.sec.gov/edgar/sec-api-documentation) by company concept using python. A serverless Flask route and helper functions to send requests and process responses. Live price data is requested from [FMP](https://site.financialmodelingprep.com) and used to calculate EPS to price ratios.
+
+Information is not accurate and there's a lot to explore. Please fork / refactor / contribute.
 
 ## Usage
 

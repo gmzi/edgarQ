@@ -3,10 +3,11 @@ import json
 import os
 
 """
-This script updates the list of CIKs that flask route will consume.
-It requests the new CIKS from SEC api and rewrites `lib/cik_local.json` with updated data. 
+This script updates the list of CIKs that flask routes will consume.
+It requests the new CIKS from SEC api and rewrites `lib/cik_local.json` and `lib/cik_local.js` 
+with updated data. 
 Run with these commands:
-                    1. Make a backup of /lib/cik_local.json
+                    1. Make backups of /lib/cik_local.json and /lib/cik_local.js.
                     1. `cd utilities`
                     2. `python3 update_ciks.py`
 """
@@ -27,4 +28,10 @@ f = open("../lib/cik_local.json", "w")
 f.write(cik_data)
 f.close()
 
-print("done! I've updated the file /lib/cik_local.json")
+# Create lib/cik_local.js:
+doc_body = f"""export const tickerSymbols = {cik_data}"""
+f = open("../lib/cik_local.js", "w")
+f.write(doc_body)
+f.close()
+
+print("done! I've updated the files /lib/cik_local.json and /lib/cik_local.js")
