@@ -21,7 +21,6 @@ def catch_all(path):
     to client.
     """
     try:
-        headers = {'User-Agent': f"{USER_AGENT}"}
         args = request.args
         ticker = args.get('ticker')
         # -------------------------------------------------------------------------
