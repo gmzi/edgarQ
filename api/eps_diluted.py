@@ -7,6 +7,7 @@ import traceback
 
 USER_AGENT = os.environ.get('USER_AGENT')
 BASE_URL = os.environ.get('BASE_URL')
+FMP_API_KEY = os.environ.get('FMP_API_KEY')
 
 app = Flask(__name__)
 
@@ -62,10 +63,15 @@ def catch_all(path):
                 avg_eps_last_3 = None
             # -------------------------------------------------------
             # PRICE REQUEST:
-            price_req = requests.get(f"{BASE_URL}/price?ticker={ticker}")
+            price_req = requests.get(
+                f"https://financialmodelingprep.com/api/v3/quote-short/{ticker}?apikey={FMP_API_KEY}")
             if price_req.status_code == 200 and avg_eps_last_3:
                 j_price = price_req.json()
-                price = j_price["price"]
+                if len(j_price):
+                    price_dict = j_price[0]
+                    price = price_dict["price"]
+                else:
+                    price = "n/d"
                 price_to_avg_eps_last_3_years_ratio = helpers.calc_price_to_average_earnings_last_3_years_ratio(
                     price, avg_eps_last_3)
             else:
