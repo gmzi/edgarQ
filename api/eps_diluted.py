@@ -83,6 +83,7 @@ def catch_all(path):
             avg_eps_growth_beginning_and_end = "n/d"
 
         result = {
+            "price": f"${price}",
             "eps_diluted": eps_diluted_table,
             "eps_diluted_data": eps_diluted,
             "avg_eps_last_3_years": f"${avg_eps_last_3}",
