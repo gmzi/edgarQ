@@ -46,8 +46,12 @@ def catch_all(path):
             j_shares_outstanding = shares_outstanding_req.json()
             shares_outstanding = helpers.track_data_last_quarter_of_year(
                 j_shares_outstanding, "shares", False)
+            shares_outstanding_latest = list(shares_outstanding.values())[0]
+            shares_outstanding_latest_millified = helpers.millify(
+                shares_outstanding_latest)
         else:
             shares_outstanding = "n/a"
+            shares_outstanding_latest_millified = "n/a"
 
         if type(assets) == dict and type(shares_outstanding) == dict:
             net_assets_for_common_stock = helpers.calculate_assets_for_common_stock(
@@ -65,6 +69,7 @@ def catch_all(path):
             shares_outstanding_table = f"<table><tbody><tr><td>N/A</td></tr></tbody></table>"
 
         result = {
+            "shares_outstanding": shares_outstanding_latest_millified,
             "shares_outstanding_history": shares_outstanding_table,
             "shares_outstanding_data": shares_outstanding_millified,
             "net_assets_for_common_data": net_assets_for_common_stock
