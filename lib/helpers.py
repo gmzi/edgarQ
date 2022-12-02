@@ -149,6 +149,12 @@ def calc_earnings_growth(list_, by_3=True):
             last_1, first_1)
         return avg_e_growth_beginning_and_end
 
+
+def calc_price_to_book_value(price, bvps):
+    step_1 = price / bvps
+    result = round(step_1, 2)
+    return result
+
 # ----------------------------------------------------------------------------
 # DATA EXTRACTION METHODS
 # ----------------------------------------------------------------------------
