@@ -76,9 +76,9 @@ def create_table_multi(dict_1, dict_2, dict_3, source_url=False):
         if len(dict_1):
             for key, value in dict_1.items():
                 year = key
-                assets = value
+                assets = f"${value}"
                 if key in dict_2:
-                    liabilities = dict_2[f"{key}"]
+                    liabilities = f"""${dict_2[f"{key}"]}"""
                     assets_to_liabilities = f"""{dict_3[f"{key}"]}x"""
                 else:
                     liabilities = "n/a"
