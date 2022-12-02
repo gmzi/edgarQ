@@ -324,6 +324,23 @@ def calculate_assets_to_liabilities(assets_dict, liabilities_dict):
     return group
 
 
+def calculate_assets_minus_liabilities(assets_dict, liabilities_dict, latest=True):
+    group = dict()
+    for key, value in assets_dict.items():
+        assets = value
+        if key in liabilities_dict:
+            liabilities = liabilities_dict[f"{key}"]
+            assets_minus_liabilities = assets - liabilities
+            group[key] = round(assets_minus_liabilities, 1)
+    sorted_group = {k: group[k] for k in sorted(group.keys(), reverse=True)}
+    if latest:
+        latest_dict = {list(sorted_group.keys())[
+            0]: list(sorted_group.values())[0]}
+        return latest_dict
+    else:
+        return sorted_group
+
+
 def millify_me(dict_):
     group = dict()
     for key, value in dict_.items():

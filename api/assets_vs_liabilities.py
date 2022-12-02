@@ -55,8 +55,11 @@ def catch_all(path):
         if type(assets) == dict and type(liabilities) == dict:
             assets_to_liabilities = helpers.calculate_assets_to_liabilities(
                 assets, liabilities)
+            assets_minus_liabilities_latest = helpers.calculate_assets_minus_liabilities(
+                assets, liabilities)
         else:
             assets_to_liabilities = "n/a"
+            assets_minus_liabilities_latest = "n/a"
 
         assets_vs_liabilities = helpers.create_table_multi(
             assets_millified, liabilities_millified, assets_to_liabilities)
@@ -64,6 +67,7 @@ def catch_all(path):
         result = {
             "assets_vs_liabilities": assets_vs_liabilities,
             "assets_to_liabilities_data": assets_to_liabilities,
+            "assets_minus_liabilities_latest": assets_minus_liabilities_latest,
             "assets_data": assets_millified,
             "liabilities_data": liabilities_millified
         }
