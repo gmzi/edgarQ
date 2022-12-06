@@ -122,7 +122,7 @@ def calc_average_earnings(list_):
 
 
 def calc_price_to_average_earnings_last_3_years_ratio(curr_price, avg_earnings,):
-    result = round(curr_price / avg_earnings, 2)
+    result = round(curr_price / avg_earnings, 1)
     return result
 
 
