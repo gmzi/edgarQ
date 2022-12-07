@@ -23,6 +23,7 @@ tickers_cik = requests.get(
 cik = tickers_cik.json()
 
 cik_data = json.dumps(cik)
+
 # Create lib/cik_local.json:
 f = open("../lib/cik_local.json", "w")
 f.write(cik_data)
@@ -34,4 +35,10 @@ f = open("../lib/cik_local.js", "w")
 f.write(doc_body)
 f.close()
 
-print("done! I've updated the files /lib/cik_local.json and /lib/cik_local.js")
+# Create lib/cik_local.py:
+doc_body = f"""tickerSymbols = {cik_data}"""
+f = open("../lib/cik_local.py", "w")
+f.write(doc_body)
+f.close()
+
+print("done! I've updated /lib/cik_local.json, cik_local.js and cik_local.py")
