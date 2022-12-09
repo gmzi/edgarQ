@@ -336,7 +336,7 @@ def track_data_quarterly(list_, key_, milli=False):
 
 
 def process_dict(dict_, reference_dict, storage_dict):
-    """if company exists in reference dict, skip company,
+    """if company exists in yearly dict, skip company,
     else add quarterly values to storage dict"""
     cik = dict_["cik"]
     val = dict_["val"]
@@ -358,8 +358,7 @@ def track_data_TTM(Q1, Q2, Q3, Q4, YEAR):
         val = dict_["val"]
         start = dict_["start"]
         end = dict_["end"]
-        data = dict({"val": val, "start": start, "end": end})
-        # year[cik] = val
+        data = dict({"val": val, "year": {"start": start, "end": end}})
         year[cik] = data
 
     """loop over quarterly data"""
@@ -372,9 +371,10 @@ def track_data_TTM(Q1, Q2, Q3, Q4, YEAR):
     for dict_ in Q4:
         process_dict(dict_, year, group)
 
-    """round values from group dict"""
+    """format data and round values from group dict"""
     for key, value in group.items():
-        group[key] = round(value, 2)
+        data = dict({"val": round(value, 2), "year": False})
+        group[key] = data
 
     """merge and sort"""
     result = {**year, **group}
