@@ -286,6 +286,49 @@ def track_data_quarterly(list_, key_, milli=False):
     return sorted_group
 
 
+def process_dict(dict_, reference_dict, storage_dict):
+    """if company exists in reference dict, skip company,
+    else add quarterly values to storage dict"""
+    cik = dict_["cik"]
+    val = dict_["val"]
+    if cik not in reference_dict:
+        if cik in storage_dict:
+            storage_dict[cik] += val
+        else:
+            storage_dict[cik] = val
+
+
+def track_data_TTM(Q1, Q2, Q3, Q4, YEAR):
+    """take four lists for quarterly data, and one list for yearly data"""
+    year = dict()
+    group = dict()
+
+    """unpack yearly data in a single dict"""
+    for dict_ in YEAR:
+        cik = dict_["cik"]
+        val = dict_["val"]
+        year[cik] = val
+
+    """loop over quarterly data"""
+    for dict_ in Q1:
+        process_dict(dict_, year, group)
+    for dict_ in Q2:
+        process_dict(dict_, year, group)
+    for dict_ in Q3:
+        process_dict(dict_, year, group)
+    for dict_ in Q4:
+        process_dict(dict_, year, group)
+
+    """round values from group dict"""
+    for key, value in group.items():
+        group[key] = round(value, 2)
+
+    """merge and sort"""
+    result = {**year, **group}
+    sorted_result = {k: result[k] for k in sorted(result.keys(), reverse=True)}
+    return sorted_result
+
+
 def track_data_last_quarter_of_year(list_, key_, milli=False):
     group = dict()
     for obj in list_["units"][key_]:
