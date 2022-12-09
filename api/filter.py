@@ -10,7 +10,7 @@ USER_AGENT = os.environ.get('USER_AGENT')
 
 app = Flask(__name__)
 
-# REQ MODEL: http://192.168.1.9:3000/api/filter?criterion=EPS&value=15
+# REQ MODEL: http://192.168.1.9:3000/api/filter?criterion=EPS&min_value=15
 
 
 @app.route('/', defaults={'path': ''})
@@ -26,7 +26,7 @@ def catch_all(path):
         headers = {'User-Agent': f"{USER_AGENT}"}
         args = request.args
         criterion = args.get('criterion')
-        value_str = args.get('value')
+        value_str = args.get('min_value')
         value = float(value_str)
         companies = data.companies_dict
 
@@ -71,6 +71,7 @@ def catch_all(path):
 
         result = {
             "filtered_results": {
+                "min_value": value,
                 "results_count": len(filtered_results),
                 "results": filtered_results
             },
