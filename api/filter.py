@@ -26,8 +26,8 @@ def catch_all(path):
         headers = {'User-Agent': f"{USER_AGENT}"}
         args = request.args
         criterion = args.get('criterion')
-        value = args.get('value')
-
+        value_str = args.get('value')
+        value = float(value_str)
         companies = data.companies_dict
 
         def get_data_frames(concept, unit, period):
@@ -66,43 +66,15 @@ def catch_all(path):
 
         TTM_EPS = helpers.sanitize_data(raw_TTM, companies)
 
-        YEAR_EPS_DICT = helpers.make_cik_keyed_dict(EPS_year)
-
-        year_data = dict()
-
-        reference = helpers.convert_reference_to_cik_keyed(companies)
-
-        for key in YEAR_EPS_DICT:
-            cik = int(key)
-            EPS = YEAR_EPS_DICT[cik]["val"]
-            if cik in reference:
-                YEAR_EPS_DICT[cik]["ticker"] = reference[cik]["ticker"]
-
-        # EPS_YEAR = helpers.sanitize_data(EPS_year, companies)
-
-        """
-        We have TTM data, now we can filter by EPS:
-        matches = filter TTM for results that match the criterion.
-        tickers_and_ciks = for match in matches:
-                            find match_cik in companies
-                            return TICKER?
-        """
+        filtered_results = {
+            k: v for (k, v) in TTM_EPS.items() if v["EPS_TTM"]["val"] >= value}
 
         result = {
-            # "EPS_Q2_len": len(EPS_Q2),
-            # "EPS_Q1_len": len(EPS_Q1),
-            # "EPS_Q3_len": len(EPS_Q3),
-            # "EPS_Q4_len": len(EPS_Q4),
-            # "all_companies": len(companies),
-            # "EPS_Q1": EPS_Q1,
-            # "EPS_Q2": EPS_Q2,
-            # "EPS_Q3": EPS_Q3,
-            # "EPS_Q4": EPS_Q4,
-            # "YEAR_EPS_len": len(YEAR_EPS_DICT),
-            # "YEAR_EPS": YEAR_EPS_DICT,
-            # "EPS_year_2022": EPS_year,
-            "TTM_EPS_len": len(TTM_EPS),
-            "TTM_EPS": TTM_EPS
+            "filtered_results": {
+                "results_count": len(filtered_results),
+                "results": filtered_results
+            },
+            "unfiltered_results": TTM_EPS
         }
 
         j_result = json.dumps(result)

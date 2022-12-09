@@ -117,6 +117,7 @@ def sanitize_data(dict_, reference_dict):
         EPS = dict_[key]
         if cik in cik_keyed_dict:
             result[cik] = cik_keyed_dict[cik]
+            result[cik]["cik_str"] = str(cik)
             result[cik]["EPS_TTM"] = EPS
         else:
             not_in_reference[cik] = EPS
