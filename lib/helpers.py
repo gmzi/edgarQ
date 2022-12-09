@@ -3,12 +3,12 @@ from os.path import join
 import math
 import json
 import requests
+import datetime
 
 
 # ----------------------------------------------------------------------------
 # UTILS
 # ----------------------------------------------------------------------------
-
 
 def handleException(e, trace):
     msg = str(e)
@@ -139,6 +139,32 @@ def convert_reference_to_cik_keyed(reference):
         cik_keyed[cik] = reference[key]
     return cik_keyed
 
+
+def make_time_frame():
+    """key: month, value: quarter"""
+    quarters = dict({
+        0: 4,
+        1: 1,
+        2: 1,
+        3: 1,
+        4: 2,
+        5: 2,
+        6: 2,
+        7: 3,
+        8: 3,
+        9: 3,
+        10: 4,
+        11: 4,
+        12: 4
+    })
+    now = datetime.datetime.now()
+    year = now.year
+    month = now.month
+    current_quarter = quarters[month]
+    latest_quarter = current_quarter - 1
+    if latest_quarter == 0:
+        year = year - 1
+    # make a system to count 3 quarters backwards from current quarter.
 
 # ----------------------------------------------------------------------------
 # FINANCIAL METHODS

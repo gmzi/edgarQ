@@ -17,10 +17,11 @@ app = Flask(__name__)
 @app.route('/<path:path>')
 def catch_all(path):
     """
-    This route takes a criterion and a value, and filters all US companies returning those companies that meet
-    the criterion.
-    In order to perform the filtering, this route calls to SEC EDGAR API for the company concept matching the
-    filtering criterion.
+    This route takes a criterion (EPS) and a value, and filters all US companies returning those companies whose EPS is 
+    higher than or equal to the provided value. In order to perform the filtering, this route performs five requests 
+    to data.sec.gov/api/xbrl/frames/, which returns the same concept for multiple companies. One request is for yearly data
+    and the other for are for the trailing four quarters. Yearly values are the output for a company when they exist, and 
+    a sum of quarterly data is performed when no yearly data is available. 
     """
     try:
         headers = {'User-Agent': f"{USER_AGENT}"}
@@ -42,6 +43,9 @@ def catch_all(path):
                     return False
             except Exception as e:
                 return e
+
+        # Obtain time data
+        time_params = helpers.make_time_frame()
 
         # GET EPS_diluted data for four trailing quarters, and annual data.
         raw_EPS_year = get_data_frames(
