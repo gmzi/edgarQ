@@ -4,6 +4,7 @@ import math
 import json
 import requests
 
+
 # ----------------------------------------------------------------------------
 # UTILS
 # ----------------------------------------------------------------------------
@@ -43,6 +44,13 @@ def millify(n):
                          int(math.floor(0 if n == 0 else math.log10(abs(n))/3))))
     # return '{:.0f}{}'.format(n / 10**(3 * millidx), millnames[millidx])
     return '{:,.2f}{}'.format(n / 10**(3 * millidx), millnames[millidx])
+
+
+def millify_me(dict_):
+    group = dict()
+    for key, value in dict_.items():
+        group[key] = millify(value)
+    return group
 
 
 def create_table(dict_, source_url=False, dollarsign=False):
@@ -89,6 +97,47 @@ def create_table_multi(dict_1, dict_2, dict_3, source_url=False):
             newRows = f"<tr><td>No data</td></tr>"
         result = f"""<table><tbody><thead><tr><th>Year</th><th>Assets to liabilities</th><th>Assets</th><th>Liabilities</th></tr></thead>{newRows}</tbody></table>{source}"""
         return result
+
+
+def sanitize_data(dict_, reference_dict):
+    """this function takes all results from quarterly data and compares it with
+    a list of all current companies. Matching results are included in the result, with
+    value, cik and ticker"""
+    cik_keyed_dict = dict()
+    not_in_reference = dict()
+    result = dict()
+    # make a dict_ with cik as keys, instead of arbitrary numbers:
+    for key in reference_dict:
+        cik = reference_dict[key]["cik_str"]
+        cik_keyed_dict[cik] = reference_dict[key]
+    # use cik_keyed_dict to check existence of dict_ values, throw unmatching values
+    # in not_in_reference for further validation:
+    for key in dict_:
+        cik = int(key)
+        EPS = dict_[key]
+        if cik in cik_keyed_dict:
+            result[cik] = cik_keyed_dict[cik]
+            result[cik]["EPS_TTM"] = EPS
+        else:
+            not_in_reference[cik] = EPS
+    return result
+
+
+def make_cik_keyed_dict(list_):
+    result = dict()
+    for elem in list_:
+        cik = elem["cik"]
+        result[cik] = elem
+    return result
+
+
+def convert_reference_to_cik_keyed(reference):
+    cik_keyed = dict()
+    for key in reference:
+        cik = reference[key]["cik_str"]
+        cik_keyed[cik] = reference[key]
+    return cik_keyed
+
 
 # ----------------------------------------------------------------------------
 # FINANCIAL METHODS
@@ -307,7 +356,11 @@ def track_data_TTM(Q1, Q2, Q3, Q4, YEAR):
     for dict_ in YEAR:
         cik = dict_["cik"]
         val = dict_["val"]
-        year[cik] = val
+        start = dict_["start"]
+        end = dict_["end"]
+        data = dict({"val": val, "start": start, "end": end})
+        # year[cik] = val
+        year[cik] = data
 
     """loop over quarterly data"""
     for dict_ in Q1:
@@ -382,10 +435,3 @@ def calculate_assets_minus_liabilities(assets_dict, liabilities_dict, latest=Tru
         return latest_dict
     else:
         return sorted_group
-
-
-def millify_me(dict_):
-    group = dict()
-    for key, value in dict_.items():
-        group[key] = millify(value)
-    return group

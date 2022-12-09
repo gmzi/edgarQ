@@ -28,7 +28,7 @@ def catch_all(path):
         criterion = args.get('criterion')
         value = args.get('value')
 
-        companies = data.companies_list
+        companies = data.companies_dict
 
         def get_data_frames(concept, unit, period):
             """route returns multiple companies for a single concept"""
@@ -61,9 +61,27 @@ def catch_all(path):
         EPS_Q3 = raw_EPS_Q3["data"]
         EPS_Q4 = raw_EPS_Q4["data"]
 
-        TTM = helpers.track_data_TTM(EPS_Q1, EPS_Q2, EPS_Q3, EPS_Q4, EPS_year)
+        raw_TTM = helpers.track_data_TTM(
+            EPS_Q1, EPS_Q2, EPS_Q3, EPS_Q4, EPS_year)
+
+        TTM_EPS = helpers.sanitize_data(raw_TTM, companies)
+
+        YEAR_EPS_DICT = helpers.make_cik_keyed_dict(EPS_year)
+
+        year_data = dict()
+
+        reference = helpers.convert_reference_to_cik_keyed(companies)
+
+        for key in YEAR_EPS_DICT:
+            cik = int(key)
+            EPS = YEAR_EPS_DICT[cik]["val"]
+            if cik in reference:
+                YEAR_EPS_DICT[cik]["ticker"] = reference[cik]["ticker"]
+
+        # EPS_YEAR = helpers.sanitize_data(EPS_year, companies)
 
         """
+        We have TTM data, now we can filter by EPS:
         matches = filter TTM for results that match the criterion.
         tickers_and_ciks = for match in matches:
                             find match_cik in companies
@@ -71,7 +89,6 @@ def catch_all(path):
         """
 
         result = {
-            # "EPS_TTM_len": len(TTM),
             # "EPS_Q2_len": len(EPS_Q2),
             # "EPS_Q1_len": len(EPS_Q1),
             # "EPS_Q3_len": len(EPS_Q3),
@@ -81,8 +98,11 @@ def catch_all(path):
             # "EPS_Q2": EPS_Q2,
             # "EPS_Q3": EPS_Q3,
             # "EPS_Q4": EPS_Q4,
+            # "YEAR_EPS_len": len(YEAR_EPS_DICT),
+            # "YEAR_EPS": YEAR_EPS_DICT,
             # "EPS_year_2022": EPS_year,
-            "EPS_TTM": TTM
+            "TTM_EPS_len": len(TTM_EPS),
+            "TTM_EPS": TTM_EPS
         }
 
         j_result = json.dumps(result)

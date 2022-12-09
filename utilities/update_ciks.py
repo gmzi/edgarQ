@@ -37,8 +37,8 @@ f.close()
 
 # Create lib/cik_local.py:
 # doc_body = f"""tickerSymbols = {cik_data}"""
-data_list = list(cik.values())
-doc_body = f"""companies_list = {data_list}"""
+# data_list = list(cik.values())
+doc_body = f"""companies_dict = {cik}"""
 f = open("../lib/cik_local.py", "w")
 f.write(doc_body)
 f.close()
