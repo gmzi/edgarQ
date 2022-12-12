@@ -2,9 +2,14 @@ tickerInputForm = document.querySelector('#tickerInput');
 submitBtn = tickerInputForm.querySelector('button');
 tickerInput = document.querySelector('#textarea');
 display = document.querySelector('#display');
+filterForm = document.querySelector('#filter');
+filterSubmitBtn = filterForm.querySelector('button');
+filterInput = document.querySelector('#minValue');
+filterDisplay = document.querySelector('#filter-display');
 
 const BASE_URL = 'api';
 
+// ----------------------------------------------------
 submitBtn.addEventListener('click', async function (e) {
   e.preventDefault();
   let ticker = tickerInput.value.trim();
@@ -18,6 +23,25 @@ submitBtn.addEventListener('click', async function (e) {
     display.innerHTML = stringData;
   }
   tickerInput.value = '';
+  return;
+});
+
+filterSubmitBtn.addEventListener('click', async function (e) {
+  e.preventDefault();
+  let minValue = filterInput.value;
+  const response = await fetch(
+    `${BASE_URL}/filter?criterion=EPS&min_value=${minValue}`
+  );
+  if (!response.ok) {
+    filterDisplay.innerHTML = 'not found';
+  } else {
+    const data = await response.json();
+    const stringData = JSON.stringify(data, null, ' ')
+      .replace('[', '')
+      .replace(']', '');
+    filterDisplay.innerHTML = stringData;
+  }
+  filterInput.value = '';
   return;
 });
 

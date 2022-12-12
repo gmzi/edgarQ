@@ -15,24 +15,30 @@
         <input id="textarea" type="textarea" placeholder="enter ticker symbol">
         <button id="#submitBtn" type="submit">query</button>
     </form>
+
+    <form id="filter">
+        <label>Filter companies by EPS</label>
+        <input id="minValue" type="number" placeholder="enter min EPS value">
+        <button id="#filterSubmitBtn" type="submit">filter</button>
+    </form>
+
     <div>
+        <h3>Company data</h3>
         <pre id="display"
+            style="font-family: Courier;background: #f4f4f4;border: solid 1px #e1e1e1;float: left;width: auto;">
+
+        </pre>
+    </div>
+
+    <div>
+        <h3>Filter results</h3>
+        <pre id="filter-display"
             style="font-family: Courier;background: #f4f4f4;border: solid 1px #e1e1e1;float: left;width: auto;">
 
         </pre>
     </div>
     <!-- --------------------------------------------------------------------- -->
     <!-- --------------------------------------------------------------------- -->
-    <div class="omni-calculator" data-calculator="math/percentage" data-width="300" data-config='{}' data-currency="USD"
-        data-show-row-controls="false" data-version="3" data-t="1668630181544">
-        <div class="omni-calculator-header"></div>
-        <div class="omni-calculator-footer">
-            <a href="https://www.omnicalculator.com/math/percentage" target="_blank"><img alt="Omni"
-                    class="omni-calculator-logo"
-                    src="https://cdn.omnicalculator.com/embed/omni-calculator-logo-long.svg" /></a>
-        </div>
-    </div>
-    <script async src="https://cdn.omnicalculator.com/sdk.js"></script>
     <script src="index.js"></script>
 </body>
 
