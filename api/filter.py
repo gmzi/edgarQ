@@ -18,15 +18,17 @@ app = Flask(__name__)
 def catch_all(path):
     """
     This route takes a criterion (EPS) and a value, and filters all US companies returning those companies whose EPS is 
-    higher than or equal to the provided value. In order to perform the filtering, this route performs five requests 
+    greater than or equal to the provided value. In order to perform the filtering, this route performs five requests 
     to data.sec.gov/api/xbrl/frames/, which returns the same concept for multiple companies. One request is for yearly data
-    and the other for are for the trailing four quarters. Yearly values are the output for a company when they exist, and 
+    and the other four are for trailing quarters. Yearly values are the output for a company when they exist, and 
     a sum of quarterly data is performed when no yearly data is available. 
     """
     try:
         headers = {'User-Agent': f"{USER_AGENT}"}
         args = request.args
         criterion = args.get('criterion')
+        if criterion == 'EPS':
+            criterion = "EarningsPerShareDiluted"
         value_str = args.get('min_value')
         value = float(value_str)
         companies = data.companies_dict
@@ -47,26 +49,26 @@ def catch_all(path):
         # Obtain time data
         time_params = helpers.make_time_frame()
 
-        # GET EPS_diluted data for four trailing quarters, and annual data.
+        # GET EPS_diluted data, both annually and four trailing quarters.
         raw_EPS_year = get_data_frames(
-            "EarningsPerShareDiluted", "USD-per-shares", "CY2022")
-        raw_EPS_Q1 = get_data_frames(
-            "EarningsPerShareDiluted", "USD-per-shares", "CY2022Q1")
-        raw_EPS_Q2 = get_data_frames(
-            "EarningsPerShareDiluted", "USD-per-shares", "CY2022Q2")
-        raw_EPS_Q3 = get_data_frames(
-            "EarningsPerShareDiluted", "USD-per-shares", "CY2022Q3")
-        raw_EPS_Q4 = get_data_frames(
-            "EarningsPerShareDiluted", "USD-per-shares", "CY2021Q4")
+            criterion, "USD-per-shares", time_params["year"])
+        raw_latest = get_data_frames(
+            criterion, "USD-per-shares", time_params["latest"])
+        raw_one_to_latest = get_data_frames(
+            criterion, "USD-per-shares", time_params["one_to_latest"])
+        raw_two_to_latest = get_data_frames(
+            criterion, "USD-per-shares", time_params["two_to_latest"])
+        raw_three_to_latest = get_data_frames(
+            criterion, "USD-per-shares", time_params["three_to_latest"])
 
         EPS_year = raw_EPS_year["data"]
-        EPS_Q1 = raw_EPS_Q1["data"]
-        EPS_Q2 = raw_EPS_Q2["data"]
-        EPS_Q3 = raw_EPS_Q3["data"]
-        EPS_Q4 = raw_EPS_Q4["data"]
+        EPS_latest = raw_latest["data"]
+        EPS_one_to_latest = raw_one_to_latest["data"]
+        EPS_two_to_latest = raw_two_to_latest["data"]
+        EPS_three_to_latest = raw_three_to_latest["data"]
 
         raw_TTM = helpers.track_data_TTM(
-            EPS_Q1, EPS_Q2, EPS_Q3, EPS_Q4, EPS_year)
+            EPS_latest, EPS_one_to_latest, EPS_two_to_latest, EPS_three_to_latest, EPS_year)
 
         TTM_EPS = helpers.sanitize_data(raw_TTM, companies)
 

@@ -110,7 +110,7 @@ def sanitize_data(dict_, reference_dict):
     for key in reference_dict:
         cik = reference_dict[key]["cik_str"]
         cik_keyed_dict[cik] = reference_dict[key]
-    # use cik_keyed_dict to check existence of dict_ values, throw unmatching values
+    # ujse cik_keyed_dict to check existence of dict_ values, throw unmatching values
     # in not_in_reference for further validation:
     for key in dict_:
         cik = int(key)
@@ -141,6 +141,9 @@ def convert_reference_to_cik_keyed(reference):
 
 
 def make_time_frame():
+    """this function takes a current timedate object, converts it into quarters and returns four quarters
+    back from now."""
+
     """key: month, value: quarter"""
     quarters = dict({
         0: 4,
@@ -157,14 +160,40 @@ def make_time_frame():
         11: 4,
         12: 4
     })
+
+    def count_4_quarters_back(current_year, current_quarter):
+        def count_back(year, num):
+            if num <= 1:
+                year = year - 1
+                num = 4
+            else:
+                num = num - 1
+            return {"year": year, "quarter": num, }
+
+        year = current_year
+        latest = count_back(current_year, current_quarter)
+        one_to_latest = count_back(latest["year"], latest["quarter"])
+        two_to_latest = count_back(
+            one_to_latest["year"], one_to_latest["quarter"])
+        three_to_latest = count_back(
+            two_to_latest["year"], two_to_latest["quarter"])
+
+        result = {
+            "year": f"CY{year}",
+            "latest": f"""CY{latest["year"]}Q{latest["quarter"]}""",
+            "one_to_latest": f"""CY{one_to_latest["year"]}Q{one_to_latest["quarter"]}""",
+            "two_to_latest": f"""CY{two_to_latest["year"]}Q{two_to_latest["quarter"]}""",
+            "three_to_latest": f"""CY{three_to_latest["year"]}Q{three_to_latest["quarter"]}"""
+        }
+        return result
+
     now = datetime.datetime.now()
-    year = now.year
+    current_year = now.year
     month = now.month
     current_quarter = quarters[month]
-    latest_quarter = current_quarter - 1
-    if latest_quarter == 0:
-        year = year - 1
-    # make a system to count 3 quarters backwards from current quarter.
+    result = count_4_quarters_back(current_year, current_quarter)
+    return result
+
 
 # ----------------------------------------------------------------------------
 # FINANCIAL METHODS
