@@ -75,9 +75,12 @@ def catch_all(path):
                 price_to_avg_eps_last_3_years_ratio = helpers.calc_price_to_average_earnings_last_3_years_ratio(
                     price, avg_eps_last_3)
             else:
-                price_to_avg_eps_last_3_years_ratio = "n/a"
+                price = "n/d"
+                price_to_avg_eps_last_3_years_ratio = "n/d"
+                avg_eps_growth_by_3 = "n/d"
+                avg_eps_growth_beginning_and_end = "n/d"
         else:
-            avg_eps_last_3 = "n/a"
+            avg_eps_last_3 = "n/d"
             price_to_avg_eps_last_3_years_ratio = "n/d"
             avg_eps_growth_by_3 = "n/d"
             avg_eps_growth_beginning_and_end = "n/d"
