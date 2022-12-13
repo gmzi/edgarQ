@@ -172,7 +172,8 @@ def make_time_frame():
 def format_data(dict_, reference_dict):
     """this function takes all results from quarterly data and compares it with
     a list of all current companies. Matching results are included in the result, with
-    value, cik and ticker"""
+    value, cik and ticker. Non matching results are stored in a dictionary for further validation (why they
+    don't match?)"""
     cik_keyed_dict = dict()
     not_in_reference = dict()
     result = dict()
