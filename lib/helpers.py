@@ -99,31 +99,6 @@ def create_table_multi(dict_1, dict_2, dict_3, source_url=False):
         return result
 
 
-def sanitize_data(dict_, reference_dict):
-    """this function takes all results from quarterly data and compares it with
-    a list of all current companies. Matching results are included in the result, with
-    value, cik and ticker"""
-    cik_keyed_dict = dict()
-    not_in_reference = dict()
-    result = dict()
-    # make a dict_ with cik as keys, instead of arbitrary numbers:
-    for key in reference_dict:
-        cik = reference_dict[key]["cik_str"]
-        cik_keyed_dict[cik] = reference_dict[key]
-    # ujse cik_keyed_dict to check existence of dict_ values, throw unmatching values
-    # in not_in_reference for further validation:
-    for key in dict_:
-        cik = int(key)
-        EPS = dict_[key]
-        if cik in cik_keyed_dict:
-            result[cik] = cik_keyed_dict[cik]
-            result[cik]["cik_str"] = str(cik)
-            result[cik]["EPS_TTM"] = EPS
-        else:
-            not_in_reference[cik] = EPS
-    return result
-
-
 def make_cik_keyed_dict(list_):
     result = dict()
     for elem in list_:
@@ -146,7 +121,6 @@ def make_time_frame():
 
     """key: month, value: quarter"""
     quarters = dict({
-        0: 4,
         1: 1,
         2: 1,
         3: 1,
@@ -192,6 +166,31 @@ def make_time_frame():
     month = now.month
     current_quarter = quarters[month]
     result = count_4_quarters_back(current_year, current_quarter)
+    return result
+
+
+def format_data(dict_, reference_dict):
+    """this function takes all results from quarterly data and compares it with
+    a list of all current companies. Matching results are included in the result, with
+    value, cik and ticker"""
+    cik_keyed_dict = dict()
+    not_in_reference = dict()
+    result = dict()
+    # make a dict_ with cik as keys instead of index numbers:
+    for key in reference_dict:
+        cik = reference_dict[key]["cik_str"]
+        cik_keyed_dict[cik] = reference_dict[key]
+    # use cik_keyed_dict to check existence of dict_ values, store non matching values
+    # in not_in_reference for further validation:
+    for key in dict_:
+        cik = int(key)
+        EPS = dict_[key]
+        if cik in cik_keyed_dict:
+            result[cik] = cik_keyed_dict[cik]
+            result[cik]["cik_str"] = str(cik)
+            result[cik]["EPS_TTM"] = EPS
+        else:
+            not_in_reference[cik] = EPS
     return result
 
 
@@ -391,22 +390,21 @@ def track_data_quarterly(list_, key_, milli=False):
     return sorted_group
 
 
-def process_dict(dict_, reference_dict, storage_dict):
-    """if company exists in yearly dict, skip company,
-    else add quarterly values to storage dict"""
-    cik = dict_["cik"]
-    val = dict_["val"]
-    if cik not in reference_dict:
-        if cik in storage_dict:
-            storage_dict[cik] += val
-        else:
-            storage_dict[cik] = val
-
-
 def track_data_TTM(Q1, Q2, Q3, Q4, YEAR):
     """take four lists for quarterly data, and one list for yearly data"""
     year = dict()
     group = dict()
+
+    def process_dict(dict_, reference_dict, storage_dict):
+        """if company exists in yearly dict, skip company,
+        else add quarterly values to storage dict"""
+        cik = dict_["cik"]
+        val = dict_["val"]
+        if cik not in reference_dict:
+            if cik in storage_dict:
+                storage_dict[cik] += val
+            else:
+                storage_dict[cik] = val
 
     """unpack yearly data in a single dict"""
     for dict_ in YEAR:
@@ -417,7 +415,7 @@ def track_data_TTM(Q1, Q2, Q3, Q4, YEAR):
         data = dict({"val": val, "year": {"start": start, "end": end}})
         year[cik] = data
 
-    """loop over quarterly data"""
+    """loop over quarterly data and store it in group dict"""
     for dict_ in Q1:
         process_dict(dict_, year, group)
     for dict_ in Q2:

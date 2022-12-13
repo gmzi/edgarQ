@@ -46,7 +46,7 @@ def catch_all(path):
             except Exception as e:
                 return e
 
-        # Obtain time data
+        # Obtain time parameters: current year and 4 quarters back from current quarter.
         time_params = helpers.make_time_frame()
 
         # GET EPS_diluted data, both annually and four trailing quarters.
@@ -70,7 +70,7 @@ def catch_all(path):
         raw_TTM = helpers.track_data_TTM(
             EPS_latest, EPS_one_to_latest, EPS_two_to_latest, EPS_three_to_latest, EPS_year)
 
-        TTM_EPS = helpers.sanitize_data(raw_TTM, companies)
+        TTM_EPS = helpers.format_data(raw_TTM, companies)
 
         filtered_results = {
             k: v for (k, v) in TTM_EPS.items() if v["EPS_TTM"]["val"] >= value}
