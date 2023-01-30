@@ -32,7 +32,7 @@ def catch_all(path):
         modelCIK = 'CIK0000000000'
         newCIK = modelCIK[:-len(codeCIK)] + codeCIK
         # -------------------------------------------------------------------------
-        check_url = f"https://finance.yahoo.com/quote/{ticker}/financials?p={ticker}"
+        validation_url = f"https://finance.yahoo.com/quote/{ticker}/financials?p={ticker}"
         net_income_req = requests.get(
             f"https://data.sec.gov/api/xbrl/companyconcept/{newCIK}/us-gaap/NetIncomeLoss.json", headers=headers)
         if net_income_req.status_code == 200:
@@ -40,7 +40,7 @@ def catch_all(path):
             # k_10_net_income_loss = helpers.data_10K(j_net_income)
             net_income = helpers.data_10K_regex(
                 j_net_income, "USD", milli=True)
-            net_income_table = helpers.create_table(net_income, check_url)
+            net_income_table = helpers.create_table(net_income, validation_url)
         else:
             net_income_table = "N/A"
 
