@@ -61,6 +61,9 @@ async function stockRequests(ticker) {
   );
   const epsDilutedRes = await fetch(`${BASE_URL}/eps_diluted?ticker=${ticker}`);
   const netIncomeRes = await fetch(`${BASE_URL}/net_income?ticker=${ticker}`);
+  const incomeTaxesRes = await fetch(
+    `${BASE_URL}/income_taxes?ticker=${ticker}`
+  );
   const sharesOutstandingAndNetAssetsForCommonRes = await fetch(
     `${BASE_URL}/shares_outstanding_and_net_assets_for_common?ticker=${ticker}`
   );
@@ -71,6 +74,7 @@ async function stockRequests(ticker) {
   const totalAssetsVsLiabilities = await totalAssetsVsLiabilitiesRes.json();
   const epsDiluted = await epsDilutedRes.json();
   const netIncome = await netIncomeRes.json();
+  const incomeTaxes = await incomeTaxesRes.json();
   const sharesOutstandingAndNetAssetsForCommon =
     await sharesOutstandingAndNetAssetsForCommonRes.json();
 
@@ -93,6 +97,7 @@ async function stockRequests(ticker) {
         epsDiluted.eps_growth_avg_10_years_beginning_and_end,
     },
     net_income: netIncome.net_income_data,
+    income_taxes: incomeTaxes.income_taxes_data,
     shares_outstanding:
       sharesOutstandingAndNetAssetsForCommon.shares_outstanding_data,
     net_assets_for_common:
