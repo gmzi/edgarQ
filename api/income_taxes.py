@@ -32,7 +32,7 @@ def catch_all(path):
         modelCIK = 'CIK0000000000'
         newCIK = modelCIK[:-len(codeCIK)] + codeCIK
         # -------------------------------------------------------------------------
-        validation_url = f"https://finance.yahoo.com/quote/{ticker}/financials?p={ticker}"
+        validation_url = f"https://apps.cnbc.com/view.asp?symbol={ticker}&uid=stocks/financials&view=cashFlowStatement"
         income_taxes_req = requests.get(
             f"https://data.sec.gov/api/xbrl/companyconcept/{newCIK}/us-gaap/IncomeTaxesPaidNet.json", headers=headers)
         if income_taxes_req.status_code == 200:
