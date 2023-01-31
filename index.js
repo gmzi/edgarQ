@@ -64,6 +64,9 @@ async function stockRequests(ticker) {
   const incomeTaxesRes = await fetch(
     `${BASE_URL}/income_taxes?ticker=${ticker}`
   );
+  const interestPaidRes = await fetch(
+    `${BASE_URL}/interest_paid?ticker=${ticker}`
+  );
   const sharesOutstandingAndNetAssetsForCommonRes = await fetch(
     `${BASE_URL}/shares_outstanding_and_net_assets_for_common?ticker=${ticker}`
   );
@@ -75,6 +78,7 @@ async function stockRequests(ticker) {
   const epsDiluted = await epsDilutedRes.json();
   const netIncome = await netIncomeRes.json();
   const incomeTaxes = await incomeTaxesRes.json();
+  const interestPaid = await interestPaidRes.json();
   const sharesOutstandingAndNetAssetsForCommon =
     await sharesOutstandingAndNetAssetsForCommonRes.json();
 
@@ -98,6 +102,7 @@ async function stockRequests(ticker) {
     },
     net_income: netIncome.net_income_data,
     income_taxes: incomeTaxes.income_taxes_data,
+    interest_paid: interestPaid.interest_paid_data,
     shares_outstanding:
       sharesOutstandingAndNetAssetsForCommon.shares_outstanding_data,
     net_assets_for_common:
