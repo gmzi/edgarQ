@@ -260,6 +260,46 @@ def calc_price_to_book_value(price, bvps):
     result = round(step_1, 2)
     return result
 
+
+def calculate_assets_for_common_stock(assets_dict, shares_dict):
+    group = dict()
+    for key, value in assets_dict.items():
+        assets = value
+        if key in shares_dict:
+            shares = shares_dict[f"{key}"]
+            net_assets_for_common = assets / shares
+            group[key] = round(net_assets_for_common, 3)
+    return group
+
+
+def calculate_assets_to_liabilities(assets_dict, liabilities_dict):
+    group = dict()
+    for key, value in assets_dict.items():
+        assets = value
+        if key in liabilities_dict:
+            liabilities = liabilities_dict[f"{key}"]
+            assets_to_liabilities = assets / liabilities
+            group[key] = round(assets_to_liabilities, 1)
+    return group
+
+
+def calculate_assets_minus_liabilities(assets_dict, liabilities_dict, latest=True):
+    group = dict()
+    for key, value in assets_dict.items():
+        assets = value
+        if key in liabilities_dict:
+            liabilities = liabilities_dict[f"{key}"]
+            assets_minus_liabilities = assets - liabilities
+            group[key] = round(assets_minus_liabilities, 1)
+    sorted_group = {k: group[k] for k in sorted(group.keys(), reverse=True)}
+    if latest:
+        latest_dict = {list(sorted_group.keys())[
+            0]: list(sorted_group.values())[0]}
+        return latest_dict
+    else:
+        return sorted_group
+
+
 # ----------------------------------------------------------------------------
 # DATA EXTRACTION METHODS
 # ----------------------------------------------------------------------------
@@ -451,42 +491,3 @@ def track_data_last_quarter_of_year(list_, key_, milli=False):
             group[key] = value
     sorted_group = {k: group[k] for k in sorted(group.keys(), reverse=True)}
     return sorted_group
-
-
-def calculate_assets_for_common_stock(assets_dict, shares_dict):
-    group = dict()
-    for key, value in assets_dict.items():
-        assets = value
-        if key in shares_dict:
-            shares = shares_dict[f"{key}"]
-            net_assets_for_common = assets / shares
-            group[key] = round(net_assets_for_common, 3)
-    return group
-
-
-def calculate_assets_to_liabilities(assets_dict, liabilities_dict):
-    group = dict()
-    for key, value in assets_dict.items():
-        assets = value
-        if key in liabilities_dict:
-            liabilities = liabilities_dict[f"{key}"]
-            assets_to_liabilities = assets / liabilities
-            group[key] = round(assets_to_liabilities, 1)
-    return group
-
-
-def calculate_assets_minus_liabilities(assets_dict, liabilities_dict, latest=True):
-    group = dict()
-    for key, value in assets_dict.items():
-        assets = value
-        if key in liabilities_dict:
-            liabilities = liabilities_dict[f"{key}"]
-            assets_minus_liabilities = assets - liabilities
-            group[key] = round(assets_minus_liabilities, 1)
-    sorted_group = {k: group[k] for k in sorted(group.keys(), reverse=True)}
-    if latest:
-        latest_dict = {list(sorted_group.keys())[
-            0]: list(sorted_group.values())[0]}
-        return latest_dict
-    else:
-        return sorted_group
